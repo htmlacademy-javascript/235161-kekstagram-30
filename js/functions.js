@@ -13,11 +13,7 @@ const isPalindrome = (string) => {
     reversed += string[i];
   }
 
-  if (string === reversed) {
-    return 'Ура, палиндром :3';
-  }
-
-  return 'Меня обманули, это не палиндром :C';
+  return string === reversed ? 'Ура, палиндром :3' : 'Меня обманули, это не палиндром :C';
 };
 isPalindrome('Лёша на полке клопа нашёл ');
 
@@ -33,11 +29,14 @@ const extractNumbers = (string) => {
       result += string[i];
     }
   }
-
+  /*
   if (result === '') {
     return NaN;
   }
 
   return Number(result);
+  */
+
+  return result === '' ? NaN : Number(result);
 };
 extractNumbers(-2023);
