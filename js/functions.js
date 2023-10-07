@@ -1,8 +1,6 @@
-//Функция для проверки длины строки
 const checkLength = (string, length) => string.length <= length;
 checkLength('321321', 4);
 
-//Функция с проверкой на палиндром
 const isPalindrome = (string) => {
 
   string = string.replaceAll(' ', '');
@@ -17,8 +15,6 @@ const isPalindrome = (string) => {
 };
 isPalindrome('Лёша на полке клопа нашёл ');
 
-
-//Функция для извлечения чисел из строки
 const extractNumbers = (string) => {
   let result = '';
 
@@ -29,13 +25,6 @@ const extractNumbers = (string) => {
       result += string[i];
     }
   }
-  /*
-  if (result === '') {
-    return NaN;
-  }
-
-  return Number(result);
-  */
 
   return result === '' ? NaN : Number(result);
 };
