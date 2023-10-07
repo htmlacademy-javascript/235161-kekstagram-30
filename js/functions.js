@@ -1,11 +1,5 @@
 //Функция для проверки длины строки
-const checkLength = (string, length) => {
-  if (string.length <= length) {
-    return true;
-  }
-
-  return string.length <= length;
-};
+const checkLength = (string, length) => string.length <= length;
 checkLength('321321', 4);
 
 //Функция с проверкой на палиндром
