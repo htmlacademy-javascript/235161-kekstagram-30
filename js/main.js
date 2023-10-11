@@ -71,7 +71,7 @@ const createRandomIdFromRangeGenerator = (min, max) => {
   };
 };
 
-const generatePhotoId = createRandomIdFromRangeGenerator(2, 25);
+const generatePhotoId = createRandomIdFromRangeGenerator(1, 25);
 const generateImgUrlId = createRandomIdFromRangeGenerator(1, 25);
 const generateCommentId = createRandomIdFromRangeGenerator(1, 1000);
 const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0, elements.length - 1)];
@@ -109,5 +109,5 @@ const createPhotoDescription = () => ({
   comment: Array.from({length: getRandomPositiveInteger(0, 30)}, generateComment)
 });
 
-const getPhotoDescriptions = Array.from({length: 20}, createPhotoDescription);
+const getPhotoDescriptions = Array.from({length: 25}, createPhotoDescription);
 export {getPhotoDescriptions};
