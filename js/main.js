@@ -85,5 +85,5 @@ const addPhoto = (index) => ({
   comment: Array.from({length: getRandomPositiveInteger(Comments.MIN, Comments.MAX)}, (_, i) => addComment(i))
 });
 
-const photos = Array.from({length: PHOTO_COUNT}, (_, index) => addPhoto(index));
-export {photos};
+const generatePhotos = () => Array.from({length: PHOTO_COUNT}, (_, index) => addPhoto(index));
+export {generatePhotos};
