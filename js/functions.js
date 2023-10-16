@@ -29,3 +29,40 @@ const extractNumbers = (string) => {
   return result === '' ? NaN : Number(result);
 };
 extractNumbers(-2023);
+
+const convertToMinutes = (string) => {
+  string = string.split(':');
+
+  const hours = parseInt(string[0], 10);
+  const minutes = parseInt(string[1], 10);
+
+  const convert = hours * 60;
+  const totalMinutes = convert + minutes;
+
+  return totalMinutes;
+};
+
+const isMeetingLegit = (dayStart, dayEnd, meetingStart, meetingLength) => {
+
+  const minutesDayStart = convertToMinutes(dayStart);
+  const minutesDayEnd = convertToMinutes(dayEnd);
+  const minutesMeeting = convertToMinutes(meetingStart);
+
+  if (minutesDayEnd > minutesDayStart) {
+    const meetingDuration = minutesMeeting + meetingLength;
+
+    if (meetingDuration <= minutesDayEnd && minutesMeeting >= minutesDayStart) {
+      return true;
+    }
+
+    return false;
+  }
+
+  return false;
+};
+
+isMeetingLegit('08:00', '17:30', '14:00', 90);// true
+isMeetingLegit('8:0', '10:0', '8:0', 120);// true
+isMeetingLegit('08:00', '14:30', '14:00', 90);// false
+isMeetingLegit('14:00', '17:30', '08:0', 90);// false
+isMeetingLegit('8:00', '17:30', '08:00', 900);// false
