@@ -71,13 +71,28 @@ const addComment = (index) => ({
   name: getRandomArrayElement(AUTHOR_NAMES)
 });
 
+const addComments = () => {
+  const commentsArr = [];
+  for (let i = 0; i < getRandomPositiveInteger(Comments.MIN, Comments.MAX); i++) {
+    commentsArr.push(addComment(i));
+  }
+  return commentsArr;
+};
+
 const addPhoto = (index) => ({
   id: index + 1,
   url: `photos/${ index + 1 }.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomPositiveInteger(Likes.MIN, Likes.MAX),
-  comment: Array.from({length: getRandomPositiveInteger(Comments.MIN, Comments.MAX)}, (_, i) => addComment(i))
+  comment: addComments()
 });
 
-const generatePhotos = () => Array.from({length: PHOTO_COUNT}, (_, index) => addPhoto(index));
-export {generatePhotos};
+const generatedPhotos = [];
+const addPhotos = () => {
+  for (let i = 0; i < PHOTO_COUNT; i++) {
+    generatedPhotos.push(addPhoto(i));
+  }
+  return generatedPhotos;
+};
+const photos = addPhotos();
+export {photos};
