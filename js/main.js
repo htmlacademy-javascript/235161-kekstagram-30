@@ -1,3 +1,3 @@
-import {generatePhotos} from './generate-photos.js';
-generatePhotos();
+import {renderPictures} from './renderPictures.js';
 
+renderPictures();
