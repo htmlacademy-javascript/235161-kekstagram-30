@@ -84,7 +84,7 @@ const addPhoto = (index) => ({
   url: `photos/${ index + 1 }.jpg`,
   description: getRandomArrayElement(DESCRIPTIONS),
   likes: getRandomPositiveInteger(Likes.MIN, Likes.MAX),
-  comment: addComments()
+  comments: addComments()
 });
 
 const generatedPhotos = [];
