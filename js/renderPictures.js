@@ -8,15 +8,19 @@ const pictureTemplate = document.querySelector('#picture')
 
 const picturesFragment = document.createDocumentFragment();
 
-photos.forEach((photo) => {
-  const pictureElement = pictureTemplate.cloneNode(true);
+const renderPictures = () => {
+  photos.forEach((photo) => {
+    const pictureElement = pictureTemplate.cloneNode(true);
 
-  pictureElement.querySelector('.picture__img').src = photo.url;
-  pictureElement.querySelector('.picture__img').alt = photo.description;
-  pictureElement.querySelector('.picture__comments').textContent = photo.comment.length;
-  pictureElement.querySelector('.picture__likes').textContent = photo.likes;
+    pictureElement.querySelector('.picture__img').src = photo.url;
+    pictureElement.querySelector('.picture__img').alt = photo.description;
+    pictureElement.querySelector('.picture__comments').textContent = photo.comment.length;
+    pictureElement.querySelector('.picture__likes').textContent = photo.likes;
 
-  picturesFragment.append(pictureElement);
-});
+    picturesFragment.append(pictureElement);
+  });
 
-picturesContainer.append(picturesFragment);
+  picturesContainer.append(picturesFragment);
+};
+
+export {renderPictures};
