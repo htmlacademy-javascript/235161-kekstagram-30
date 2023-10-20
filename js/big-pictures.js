@@ -3,23 +3,29 @@ import { isEscapeKey } from './util.js';
 const bigPictureContainer = document.querySelector('.big-picture');
 const bigPictureCloseButton = document.querySelector('.big-picture__cancel');
 
-const openPictureThumbnail = (evt) => {
-  if (evt.target.closest('.picture')) {
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
-    bigPictureContainer.classList.remove('hidden');
-
-    bigPictureCloseButton.addEventListener('click', () => {
-      bigPictureContainer.classList.add('hidden');
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (isEscapeKey(event)) {
-        event.preventDefault();
-        bigPictureContainer.classList.add('hidden');
-      }
-    });
+    bigPictureContainer.classList.add('hidden');
+    //closePicture();
   }
 };
 
+const openPicture = (evt) => {
+  bigPictureContainer.classList.remove('hidden');
+  //fillPicture();
+  bigPictureContainer.querySelector('.big-picture__img img').src = evt.target.src;
+
+  document.addEventListener('keydown', onDocumentKeydown);
+};
+
+const closePicture = () => {
+  bigPictureContainer.classList.add('hidden');
+
+  document.removeEventListener('keydown', onDocumentKeydown);
+};
+
 const picturesContainer = document.querySelector('.pictures');
-picturesContainer.addEventListener('click', openPictureThumbnail);
+picturesContainer.addEventListener('click', openPicture);
+
+bigPictureCloseButton.addEventListener('click', closePicture);
