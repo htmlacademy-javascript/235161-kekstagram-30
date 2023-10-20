@@ -1,19 +1,25 @@
-import {photos} from './generate-photos.js';
-import {renderPictures} from './renderPictures.js';
+import { isEscapeKey } from './util.js';
 
-renderPictures(photos);
+const bigPictureContainer = document.querySelector('.big-picture');
+const bigPictureCloseButton = document.querySelector('.big-picture__cancel');
 
-const onPictureClick = (evt) => {
+const openPictureThumbnail = (evt) => {
   if (evt.target.closest('.picture')) {
     evt.preventDefault();
-    //console.log('Я нажаль!');
+    bigPictureContainer.classList.remove('hidden');
+
+    bigPictureCloseButton.addEventListener('click', () => {
+      bigPictureContainer.classList.add('hidden');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (isEscapeKey(event)) {
+        event.preventDefault();
+        bigPictureContainer.classList.add('hidden');
+      }
+    });
   }
 };
 
-
 const picturesContainer = document.querySelector('.pictures');
-picturesContainer.addEventListener('click', onPictureClick);
-
-// Заведите модуль, который будет отвечать за отрисовку окна с полноразмерным изображением. Done!
-
-//Окно должно открываться при клике на миниатюру. Данные для окна (изображение, комментарии, лайки и так далее) берите из того же объекта, который использовался для отрисовки соответствующей миниатюры.
+picturesContainer.addEventListener('click', openPictureThumbnail);
