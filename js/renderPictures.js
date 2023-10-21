@@ -1,3 +1,5 @@
+import {openPicture} from './big-pictures.js';
+
 const picturesContainer = document.querySelector('.pictures');
 
 const pictureTemplate = document.querySelector('#picture')
@@ -20,7 +22,10 @@ const renderPicture = (photo) => {
 const renderPictures = (photos) => {
 
   photos.forEach((item) => {
-    picturesFragment.append(renderPicture(item));
+    const thumbnail = renderPicture(item);
+    picturesFragment.append(thumbnail);
+
+    thumbnail.addEventListener('click', () => openPicture(item));
   });
 
   picturesContainer.append(picturesFragment);

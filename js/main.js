@@ -3,4 +3,4 @@ import {renderPictures} from './renderPictures.js';
 
 renderPictures(photos);
 
-import './big-pictures.js';
+//import './big-pictures.js';
