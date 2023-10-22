@@ -60,6 +60,8 @@ const loadComments = (comments) => {
     if (index < start + limit) {
       comment.classList.remove('hidden');
       bigPictureContainer.querySelector('.social__comment-shown-count').textContent = limit;
+    } else {
+      comment.classList.add('hidden');
     }
   });
 };
