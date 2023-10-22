@@ -1,18 +1,22 @@
 import { isEscapeKey } from './util.js';
 
 const bigPictureContainer = document.querySelector('.big-picture');
-const bigPictureCloseButton = document.querySelector('.big-picture__cancel');
+const bigPictureCloseButton = bigPictureContainer.querySelector('.big-picture__cancel');
 const commentsLoaderButton = bigPictureContainer.querySelector('.comments-loader');
 const commentsList = document.querySelector('.social__comments');
-//commentsList.innerHTML = '';
+
+let start = 0;
+const limit = 5;
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
+
     bigPictureContainer.classList.add('hidden');
     document.body.classList.remove('modal-open');
     commentsList.innerHTML = '';
-    //closePicture();
+
+    start = 0;
   }
 };
 
@@ -36,24 +40,6 @@ const createComment = (comment) => {
 
   return commentElement;
 };
-/*
-const commentLoaderGenerator = (comments) => {
-  let start = 0;
-  const limit = 5;
-
-  return () => {
-    comments.forEach((comment, index) => {
-      if (index < start + limit) {
-        comment.classList.remove('hidden');
-        bigPictureContainer.querySelector('.social__comment-shown-count').textContent = start;
-      }
-    });
-  };
-};
-*/
-
-let start = 0;
-const limit = 5;
 
 const loadComments = (comments) => {
   comments.forEach((comment, index) => {
@@ -64,6 +50,21 @@ const loadComments = (comments) => {
       comment.classList.add('hidden');
     }
   });
+};
+
+const showMoreComments = () => {
+  start += limit;
+
+  const commentListElements = document.querySelectorAll('.social__comment');
+  loadComments(commentListElements);
+
+  const visibleCommentsCount = commentsList.querySelectorAll('.social__comment').length - commentsList.querySelectorAll('.hidden').length;
+  bigPictureContainer.querySelector('.social__comment-shown-count').textContent = visibleCommentsCount;
+
+  if (start >= visibleCommentsCount) {
+    bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
+    bigPictureContainer.querySelector('.social__comment-shown-count').textContent = visibleCommentsCount;
+  }
 };
 
 const openPicture = (item) => {
@@ -78,11 +79,7 @@ const openPicture = (item) => {
   comments.forEach((comment) => {
     commentsList.append(createComment(comment));
   });
-  /*
-  const commentListElements = document.querySelectorAll('.social__comment');
-  const loadComments = commentLoaderGenerator(commentListElements);
-  loadComments();
-  */
+
   const commentListElements = document.querySelectorAll('.social__comment');
   loadComments(commentListElements);
 
@@ -103,17 +100,15 @@ const closePicture = () => {
   bigPictureContainer.classList.add('hidden');
   document.body.classList.remove('modal-open');
   commentsList.innerHTML = '';
+  start = 0;
 
   document.removeEventListener('keydown', onDocumentKeydown);
+  commentsLoaderButton.removeEventListener('click', () => showMoreComments());
 };
 
 bigPictureCloseButton.addEventListener('click', closePicture);
 
-commentsLoaderButton.addEventListener('click', () => {
-  start += limit;
-  const commentListElements = document.querySelectorAll('.social__comment');
-  loadComments(commentListElements);
-});
+commentsLoaderButton.addEventListener('click', () => showMoreComments());
 
 export {openPicture, closePicture};
 
