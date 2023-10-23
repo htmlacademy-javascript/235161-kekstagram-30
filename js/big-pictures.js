@@ -98,7 +98,6 @@ const showMoreComments = () => {
   }
 };
 
-
 const openPicture = (item) => {
   bigPictureContainer.querySelector('.big-picture__img img').src = item.url;
   bigPictureContainer.querySelector('.likes-count').textContent = item.likes;
@@ -128,6 +127,8 @@ const openPicture = (item) => {
   }
 
   document.body.classList.add('modal-open');
+
+  commentsLoaderButton.addEventListener('click', /*() => */showMoreComments);
 };
 
 const closePicture = () => {
@@ -138,12 +139,12 @@ const closePicture = () => {
   generatedComments.splice(0, generatedComments.length);
 
   document.removeEventListener('keydown', onDocumentKeydown);
-  commentsLoaderButton.removeEventListener('click', /*() => */showMoreComments);
+  commentsLoaderButton.removeEventListener('click', showMoreComments);
 };
 
 bigPictureCloseButton.addEventListener('click', closePicture);
 
-commentsLoaderButton.addEventListener('click', /*() => */showMoreComments);
+//commentsLoaderButton.addEventListener('click', showMoreComments);
 
 export {openPicture, closePicture};
 
