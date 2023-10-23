@@ -103,12 +103,12 @@ const closePicture = () => {
   start = 0;
 
   document.removeEventListener('keydown', onDocumentKeydown);
-  commentsLoaderButton.removeEventListener('click', () => showMoreComments());
+  commentsLoaderButton.removeEventListener('click', /*() => */showMoreComments);
 };
 
 bigPictureCloseButton.addEventListener('click', closePicture);
 
-commentsLoaderButton.addEventListener('click', () => showMoreComments());
+commentsLoaderButton.addEventListener('click', /*() => */showMoreComments);
 
 export {openPicture, closePicture};
 
