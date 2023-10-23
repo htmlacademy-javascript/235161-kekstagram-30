@@ -26,7 +26,7 @@ const onDocumentKeydown = (evt) => {
 const createComment = (comment) => {
   const commentElement = document.createElement('li');
   commentElement.classList.add('social__comment');
-  commentElement.classList.add('hidden');
+  //commentElement.classList.add('hidden');
 
   const commentAvatar = document.createElement('img');
   commentAvatar.classList.add('social__picture');
@@ -47,7 +47,7 @@ const createComment = (comment) => {
 const loadComments = (comments) => {
   comments.forEach((comment, index) => {
     if (index < start + limit) {
-      comment.classList.remove('hidden');
+      //comment.classList.remove('hidden');
       commentsList.append(comment);
       bigPictureContainer.querySelector('.social__comment-shown-count').textContent = document.querySelectorAll('.social__comment').length;
     }
@@ -59,12 +59,10 @@ const showMoreComments = () => {
 
   loadComments(generatedComments);
 
-  const visibleCommentsCount = commentsList.querySelectorAll('.social__comment').length - commentsList.querySelectorAll('.hidden').length;
   bigPictureContainer.querySelector('.social__comment-shown-count').textContent = document.querySelectorAll('.social__comment').length;
 
-  if (start >= visibleCommentsCount) {
+  if (generatedComments.length <= limit || start + limit >= generatedComments.length) {
     bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
-    bigPictureContainer.querySelector('.social__comment-shown-count').textContent = visibleCommentsCount;
   }
 };
 
@@ -85,11 +83,9 @@ const openPicture = (item) => {
 
   bigPictureContainer.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentKeydown);
-  bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');
-  commentsLoaderButton.classList.add('hidden');
 
-  if (comments.length > 5) {
-    bigPictureContainer.querySelector('.social__comment-count').classList.remove('hidden');
+  commentsLoaderButton.classList.add('hidden');
+  if (comments.length > limit) {
     bigPictureContainer.querySelector('.comments-loader').classList.remove('hidden');
   }
 
@@ -101,6 +97,7 @@ const openPicture = (item) => {
 const closePicture = () => {
   bigPictureContainer.classList.add('hidden');
   document.body.classList.remove('modal-open');
+
   commentsList.innerHTML = '';
   start = 0;
   generatedComments.splice(0, generatedComments.length);
