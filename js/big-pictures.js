@@ -8,8 +8,7 @@ const commentsList = document.querySelector('.social__comments');
 let start = 0;
 const limit = 5;
 
-//в этот массив записаны все сгенерированные комментарии
-let generatedComments = [];
+const generatedComments = [];
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -20,7 +19,7 @@ const onDocumentKeydown = (evt) => {
     commentsList.innerHTML = '';
 
     start = 0;
-    generatedComments = generatedComments.splice(0, generatedComments);
+    generatedComments.splice(0, generatedComments.length);
   }
 };
 
@@ -62,7 +61,8 @@ const loadComments = (comments) => {
     if (index < start + limit) {
       comment.classList.remove('hidden');
       commentsList.append(comment);
-      bigPictureContainer.querySelector('.social__comment-shown-count').textContent = limit;
+      //bigPictureContainer.querySelector('.social__comment-shown-count').textContent = limit;
+      bigPictureContainer.querySelector('.social__comment-shown-count').textContent = document.querySelectorAll('.social__comment').length;
     }
   });
 };
@@ -89,7 +89,8 @@ const showMoreComments = () => {
   loadComments(generatedComments);
 
   const visibleCommentsCount = commentsList.querySelectorAll('.social__comment').length - commentsList.querySelectorAll('.hidden').length;
-  bigPictureContainer.querySelector('.social__comment-shown-count').textContent = visibleCommentsCount;
+  //bigPictureContainer.querySelector('.social__comment-shown-count').textContent = visibleCommentsCount;
+  bigPictureContainer.querySelector('.social__comment-shown-count').textContent = document.querySelectorAll('.social__comment').length;
 
   if (start >= visibleCommentsCount) {
     bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
@@ -134,7 +135,7 @@ const closePicture = () => {
   document.body.classList.remove('modal-open');
   commentsList.innerHTML = '';
   start = 0;
-  generatedComments = generatedComments.splice(0, generatedComments);
+  generatedComments.splice(0, generatedComments.length);
 
   document.removeEventListener('keydown', onDocumentKeydown);
   commentsLoaderButton.removeEventListener('click', /*() => */showMoreComments);
