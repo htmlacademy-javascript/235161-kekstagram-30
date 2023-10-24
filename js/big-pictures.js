@@ -12,20 +12,6 @@ const limit = 5;
 
 let currentPictureComments = [];
 
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-
-    bigPictureContainer.classList.add('hidden');
-    document.body.classList.remove('modal-open');
-
-
-    commentsList.innerHTML = '';
-    start = 0;
-    currentPictureComments.splice(0, currentPictureComments.length);
-  }
-};
-
 const createComment = (comment) => {
   const commentElement = document.createElement('li');
   commentElement.classList.add('social__comment');
@@ -69,10 +55,37 @@ const renderComments = (comments) => {
   });
 };
 
-const showMoreComments = () => {
+const onLoadCommentsClick = () => {
   start += limit;
 
   renderComments(currentPictureComments);
+};
+
+const closePicture = () => {
+  bigPictureContainer.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+
+  commentsList.innerHTML = '';
+  start = 0;
+  currentPictureComments.splice(0, currentPictureComments.length);
+};
+
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+
+    closePicture();
+
+    document.removeEventListener('keydown', onDocumentKeydown);
+    commentsLoaderButton.removeEventListener('click', onLoadCommentsClick);
+  }
+};
+
+const onCloseBigPictureClick = () => {
+  closePicture();
+
+  bigPictureCloseButton.removeEventListener('click', onCloseBigPictureClick);
+  commentsLoaderButton.removeEventListener('click', onLoadCommentsClick);
 };
 
 const openPicture = (item) => {
@@ -89,22 +102,9 @@ const openPicture = (item) => {
   document.body.classList.add('modal-open');
 
   document.addEventListener('keydown', onDocumentKeydown);
-  commentsLoaderButton.addEventListener('click', showMoreComments);
+  bigPictureCloseButton.addEventListener('click', onCloseBigPictureClick);
+  commentsLoaderButton.addEventListener('click', onLoadCommentsClick);
 };
-
-const closePicture = () => {
-  bigPictureContainer.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-
-  commentsList.innerHTML = '';
-  start = 0;
-  currentPictureComments.splice(0, currentPictureComments.length);
-
-  document.removeEventListener('keydown', onDocumentKeydown);
-  commentsLoaderButton.removeEventListener('click', showMoreComments);
-};
-
-bigPictureCloseButton.addEventListener('click', closePicture);
 
 export {openPicture, closePicture};
 

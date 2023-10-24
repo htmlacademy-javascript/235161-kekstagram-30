@@ -25,7 +25,13 @@ const renderPictures = (photos) => {
     const thumbnail = renderPicture(item);
     picturesFragment.append(thumbnail);
 
-    thumbnail.addEventListener('click', () => openPicture(item));
+    const onThumbnailClick = (evt) => {
+      evt.preventDefault();
+
+      openPicture(item);
+    };
+
+    thumbnail.addEventListener('click', onThumbnailClick);
   });
 
   picturesContainer.append(picturesFragment);
