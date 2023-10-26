@@ -48,7 +48,7 @@ imgUploadInput.addEventListener('change', onImgUploadButtonClick);
 //Регулярное выражение сделанное по примеру из видео
 const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
 
-//Тут будет валидация. Почти сделал валидацию хэштегов, осталась проверка на уникальность
+//Тут будет валидация
 const pristine = new Pristine(imgUploadForm);
 
 const hasDuplicates = (array) => {
@@ -71,6 +71,11 @@ const validateHashtags = (hashtags) => {
     return false;
   }
 
+  if (hasDuplicates(splitHashtags)) {
+    //console.log('Есть дубликаты!');
+    return false;
+  }
+
   for (let i = 0; i < splitHashtags.length; i++) {
     //Кривая проверка на то, что инпут с хэштэгами пуст, не смог решить почему если отправлять пустой инпут в массив попадает элемент = ''
     if (splitHashtags[i] === '' && splitHashtags.length === 1) {
@@ -78,11 +83,6 @@ const validateHashtags = (hashtags) => {
     }
 
     if (!regexp.test(splitHashtags[i])) {
-      return false;
-    }
-
-    if (hasDuplicates(splitHashtags)) {
-      //console.log('Есть дубликаты!');
       return false;
     }
   }
