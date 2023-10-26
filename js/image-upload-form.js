@@ -59,7 +59,13 @@ imgUploadInput.addEventListener('change', onImgUploadButtonClick);
 const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
 
 //Тут будет валидация
-const pristine = new Pristine(imgUploadForm);
+const pristine = new Pristine(imgUploadForm , {
+  classTo: 'img-upload__field-wrapper',
+  errorClass: 'img-upload__field-wrapper--error',
+  successClass: 'img-upload__field-wrapper--valid',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextClass: 'form__error'
+});
 
 const hasDuplicates = (array) => {
   const valuesSoFar = Object.create(null);
@@ -99,11 +105,33 @@ const validateHashtags = (hashtags) => {
   return true;
 };
 
-pristine.addValidator(imgEditHashtagsInput, validateHashtags);
+
+const getErrorMessage = (hashtags) => {
+  const splitHashtags = hashtags.trim().split(' ');
+  let errorMessage = '';
+
+  if (splitHashtags.length > 5) {
+    errorMessage = 'Превышено количество хэш-тегов';
+    return errorMessage;
+  }
+
+  if (hasDuplicates(splitHashtags)) {
+    errorMessage = 'Хэш-теги повторяются';
+    return errorMessage;
+  }
+
+  for (let i = 0; i < splitHashtags.length; i++) {
+    if (!regexp.test(splitHashtags[i])) {
+      errorMessage = 'Введён невалидный хэш-тег';
+      return errorMessage;
+    }
+  }
+};
+pristine.addValidator(imgEditHashtagsInput, validateHashtags, getErrorMessage);
 
 const validateCommentMessage = (value) => value.length <= 140;
 
-pristine.addValidator(imgEditCommentArea, validateCommentMessage, 'Комментарий не должен быть длиннее 140 символов');
+pristine.addValidator(imgEditCommentArea, validateCommentMessage, 'Длина комментария больше 140 символов');
 
 imgUploadForm.addEventListener('submit', (evt) => {
   //evt.preventDefault();
