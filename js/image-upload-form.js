@@ -4,6 +4,7 @@ const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
 const imgEditForm = document.querySelector('.img-upload__overlay');
 const imgEditHashtagsInput = document.querySelector('.text__hashtags');
+const imgEditCommentArea = document.querySelector('.text__description');
 const imgEditCloseButton = document.querySelector('.img-upload__cancel');
 
 const closeImgEditModal = () => {
@@ -12,13 +13,20 @@ const closeImgEditModal = () => {
 
   imgUploadInput.value = '';
   imgEditHashtagsInput.value = '';
-  //Здесь нужно будет добавить сброс остальных полей формы, но это потом
+  imgEditCommentArea.value = '';
+};
+
+const stopEscKeydownPropagation = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.stopPropagation();
+  }
 };
 
 const onImgEditCloseButtonClick = () => {
   closeImgEditModal();
 
   imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
+  imgEditCommentArea.removeEventListener('keydown', stopEscKeydownPropagation);
 };
 
 const onEscKeydown = (evt) => {
@@ -28,6 +36,7 @@ const onEscKeydown = (evt) => {
     closeImgEditModal();
 
     document.removeEventListener('keydown', onEscKeydown);
+    imgEditCommentArea.removeEventListener('keydown', stopEscKeydownPropagation);
   }
 };
 
@@ -41,6 +50,7 @@ const onImgUploadButtonClick = () => {
 
   imgEditCloseButton.addEventListener('click', onImgEditCloseButtonClick);
   document.addEventListener('keydown', onEscKeydown);
+  imgEditCommentArea.addEventListener('keydown', stopEscKeydownPropagation);
 };
 
 imgUploadInput.addEventListener('change', onImgUploadButtonClick);
@@ -72,7 +82,6 @@ const validateHashtags = (hashtags) => {
   }
 
   if (hasDuplicates(splitHashtags)) {
-    //console.log('Есть дубликаты!');
     return false;
   }
 
@@ -92,14 +101,18 @@ const validateHashtags = (hashtags) => {
 
 pristine.addValidator(imgEditHashtagsInput, validateHashtags);
 
+const validateCommentMessage = (value) => value.length <= 140;
+
+pristine.addValidator(imgEditCommentArea, validateCommentMessage, 'Комментарий не должен быть длиннее 140 символов');
+
 imgUploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+  //evt.preventDefault();
   const isValid = pristine.validate();
 
   if(isValid) {
     //console.log('Можно отправлять');
   } else {
     //console.log('Форма невалидна');
-    //evt.preventDefault();
+    evt.preventDefault();
   }
 });
