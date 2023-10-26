@@ -51,6 +51,19 @@ const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
 //Тут будет валидация. Почти сделал валидацию хэштегов, осталась проверка на уникальность
 const pristine = new Pristine(imgUploadForm);
 
+const hasDuplicates = (array) => {
+  const valuesSoFar = Object.create(null);
+
+  for (let i = 0; i < array.length; i++) {
+    const value = array[i];
+    if (value in valuesSoFar) {
+      return true;
+    }
+    valuesSoFar[value] = true;
+  }
+  return false;
+};
+
 const validateHashtags = (hashtags) => {
   const splitHashtags = hashtags.trim().split(' ');
 
@@ -67,6 +80,11 @@ const validateHashtags = (hashtags) => {
     if (!regexp.test(splitHashtags[i])) {
       return false;
     }
+
+    if (hasDuplicates(splitHashtags)) {
+      //console.log('Есть дубликаты!');
+      return false;
+    }
   }
 
   return true;
@@ -75,12 +93,13 @@ const validateHashtags = (hashtags) => {
 pristine.addValidator(imgEditHashtagsInput, validateHashtags);
 
 imgUploadForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
   const isValid = pristine.validate();
 
   if(isValid) {
     //console.log('Можно отправлять');
   } else {
     //console.log('Форма невалидна');
-    evt.preventDefault();
+    //evt.preventDefault();
   }
 });
