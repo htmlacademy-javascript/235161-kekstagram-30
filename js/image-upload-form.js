@@ -16,27 +16,22 @@ const closeImgEditModal = () => {
   imgEditCommentArea.value = '';
 };
 
-const stopEscKeydownPropagation = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.stopPropagation();
-  }
-};
-
 const onImgEditCloseButtonClick = () => {
   closeImgEditModal();
 
   imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
-  imgEditCommentArea.removeEventListener('keydown', stopEscKeydownPropagation);
 };
 
 const onEscKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+  if (isEscapeKey(evt) &&
+  !evt.target.classList.contains('text__hashtags') &&
+  !evt.target.classList.contains('text__description')
+  ) {
     evt.preventDefault();
 
     closeImgEditModal();
 
     document.removeEventListener('keydown', onEscKeydown);
-    imgEditCommentArea.removeEventListener('keydown', stopEscKeydownPropagation);
   }
 };
 
@@ -50,7 +45,6 @@ const onImgUploadButtonClick = () => {
 
   imgEditCloseButton.addEventListener('click', onImgEditCloseButtonClick);
   document.addEventListener('keydown', onEscKeydown);
-  imgEditCommentArea.addEventListener('keydown', stopEscKeydownPropagation);
 };
 
 imgUploadInput.addEventListener('change', onImgUploadButtonClick);
