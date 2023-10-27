@@ -1,11 +1,15 @@
 import { isEscapeKey } from './util.js';
 
+const MAX_SYMBOLS = 20;
+const MAX_HASHTAGS = 5;
+
 const imgUploadForm = document.querySelector('.img-upload__form');
-const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
+const imgUploadInput = document.querySelector('.img-upload__input');
 const imgEditForm = document.querySelector('.img-upload__overlay');
 const imgEditHashtagsInput = document.querySelector('.text__hashtags');
 const imgEditCommentArea = document.querySelector('.text__description');
 const imgEditCloseButton = document.querySelector('.img-upload__cancel');
+const imgEditSubmitButton = document.querySelector('.img-upload__submit');
 
 const closeImgEditModal = () => {
   imgEditForm.classList.add('hidden');
@@ -16,27 +20,22 @@ const closeImgEditModal = () => {
   imgEditCommentArea.value = '';
 };
 
-const stopEscKeydownPropagation = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.stopPropagation();
-  }
-};
-
 const onImgEditCloseButtonClick = () => {
   closeImgEditModal();
 
   imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
-  imgEditCommentArea.removeEventListener('keydown', stopEscKeydownPropagation);
 };
 
 const onEscKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+  if (isEscapeKey(evt) &&
+  !evt.target.classList.contains('text__hashtags') &&
+  !evt.target.classList.contains('text__description')
+  ) {
     evt.preventDefault();
 
     closeImgEditModal();
 
     document.removeEventListener('keydown', onEscKeydown);
-    imgEditCommentArea.removeEventListener('keydown', stopEscKeydownPropagation);
   }
 };
 
@@ -45,102 +44,94 @@ const openImgEditModal = () => {
   document.body.classList.add('modal-open');
 };
 
-const onImgUploadButtonClick = () => {
+const onImgUploadButtonChange = () => {
   openImgEditModal();
 
   imgEditCloseButton.addEventListener('click', onImgEditCloseButtonClick);
   document.addEventListener('keydown', onEscKeydown);
-  imgEditCommentArea.addEventListener('keydown', stopEscKeydownPropagation);
 };
 
-imgUploadInput.addEventListener('change', onImgUploadButtonClick);
-
-//Регулярное выражение сделанное по примеру из видео
-const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
+imgUploadInput.addEventListener('change', onImgUploadButtonChange);
 
 //Тут будет валидация
 const pristine = new Pristine(imgUploadForm , {
   classTo: 'img-upload__field-wrapper',
-  errorClass: 'img-upload__field-wrapper--error',
+  errorClass: 'img-upload__field-wrapper--invalid',
   successClass: 'img-upload__field-wrapper--valid',
   errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'div',
   errorTextClass: 'form__error'
 });
 
-const hasDuplicates = (array) => {
-  const valuesSoFar = Object.create(null);
+let errorMessage = '';
+const getErrorMessage = () => errorMessage;
 
-  for (let i = 0; i < array.length; i++) {
-    const value = array[i];
-    if (value in valuesSoFar) {
-      return true;
-    }
-    valuesSoFar[value] = true;
-  }
-  return false;
-};
+const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
 
 const validateHashtags = (hashtags) => {
-  const splitHashtags = hashtags.trim().split(' ');
+  const hashtagsString = hashtags.toLowerCase().trim();
+  const splitHashtags = hashtagsString.split(/\s+/);
 
-  if (splitHashtags.length > 5) {
-    return false;
+  if (!hashtagsString) {
+    return true;
   }
 
-  if (hasDuplicates(splitHashtags)) {
-    return false;
+  if (splitHashtags.length === 0) {
+    return true;
   }
 
-  for (let i = 0; i < splitHashtags.length; i++) {
-    //Кривая проверка на то, что инпут с хэштэгами пуст, не смог решить почему если отправлять пустой инпут в массив попадает элемент = ''
-    if (splitHashtags[i] === '' && splitHashtags.length === 1) {
-      return true;
+  const rules = [
+    {
+      check: splitHashtags.some((hashtag) => hashtag.indexOf('#', 1) >= 1),
+      error: 'Хэш-теги разделяются пробелами'
+    },
+    {
+      check: splitHashtags.some((hashtag) => hashtag[0] !== '#'),
+      error: 'Хэш-тег должен начинаться с символа #'
+    },
+    {
+      check: splitHashtags.some((hashtag, index, array) => array.includes(hashtag, index + 1)),
+      error: 'Хэш-теги не должны повторяться'
+    },
+    {
+      check: splitHashtags.some((hashtag) => hashtag.length > MAX_SYMBOLS),
+      error: `Длинна хэш-тега не должна превышать ${MAX_SYMBOLS} символов, включая решетку`
+    },
+    {
+      check: splitHashtags.length > MAX_HASHTAGS,
+      error: `К фото нельзя добавлять более ${MAX_HASHTAGS} хэш-тегов`
+    },
+    {
+      check: splitHashtags.some((hashtag) => !regexp.test(hashtag)),
+      error: 'Хэш-тег содержит запрещенные символы'
     }
+  ];
 
-    if (!regexp.test(splitHashtags[i])) {
-      return false;
+  return rules.every((rule) => {
+    const isInvalid = rule.check;
+    if (isInvalid) {
+      errorMessage = rule.error;
     }
-  }
-
-  return true;
+    return !isInvalid;
+  });
 };
 
-
-const getErrorMessage = (hashtags) => {
-  const splitHashtags = hashtags.trim().split(' ');
-  let errorMessage = '';
-
-  if (splitHashtags.length > 5) {
-    errorMessage = 'Превышено количество хэш-тегов';
-    return errorMessage;
-  }
-
-  if (hasDuplicates(splitHashtags)) {
-    errorMessage = 'Хэш-теги повторяются';
-    return errorMessage;
-  }
-
-  for (let i = 0; i < splitHashtags.length; i++) {
-    if (!regexp.test(splitHashtags[i])) {
-      errorMessage = 'Введён невалидный хэш-тег';
-      return errorMessage;
-    }
-  }
-};
 pristine.addValidator(imgEditHashtagsInput, validateHashtags, getErrorMessage);
 
-const validateCommentMessage = (value) => value.length <= 140;
+const ohHashtagInput = () => {
+  if (pristine.validate()) {
+    imgEditSubmitButton.disabled = false;
+  } else {
+    imgEditSubmitButton.disabled = true;
+  }
+};
 
-pristine.addValidator(imgEditCommentArea, validateCommentMessage, 'Длина комментария больше 140 символов');
+imgEditHashtagsInput.addEventListener('input', ohHashtagInput);
 
 imgUploadForm.addEventListener('submit', (evt) => {
-  //evt.preventDefault();
   const isValid = pristine.validate();
 
-  if(isValid) {
-    //console.log('Можно отправлять');
-  } else {
-    //console.log('Форма невалидна');
+  if(!isValid) {
     evt.preventDefault();
   }
 });
