@@ -129,10 +129,6 @@ const getErrorMessage = (hashtags) => {
 };
 pristine.addValidator(imgEditHashtagsInput, validateHashtags, getErrorMessage);
 
-const validateCommentMessage = (value) => value.length <= 140;
-
-pristine.addValidator(imgEditCommentArea, validateCommentMessage, 'Длина комментария больше 140 символов');
-
 imgUploadForm.addEventListener('submit', (evt) => {
   //evt.preventDefault();
   const isValid = pristine.validate();
