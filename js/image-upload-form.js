@@ -62,78 +62,7 @@ const pristine = new Pristine(imgUploadForm , {
   errorTextTag: 'div',
   errorTextClass: 'form__error'
 });
-/*
-const hasDuplicates = (array) => {
-  const valuesSoFar = Object.create(null);
 
-  for (let i = 0; i < array.length; i++) {
-    const value = array[i];
-    if (value in valuesSoFar) {
-      return true;
-    }
-    valuesSoFar[value] = true;
-  }
-  return false;
-};
-
-const validateHashtags = (hashtags) => {
-  const hashtagsString = hashtags.toLowerCase().trim();
-  const splitHashtags = hashtagsString.split(/\s+/);
-
-  if (!hashtagsString) {
-    return true;
-  }
-
-  if (splitHashtags.length === 0) {
-    return true;
-  }
-
-  if (splitHashtags.length > MAX_HASHTAGS) {
-    return false;
-  }
-
-  if (hasDuplicates(splitHashtags)) {
-    return false;
-  }
-
-  for (let i = 0; i < splitHashtags.length; i++) {
-    //Кривая проверка на то, что инпут с хэштэгами пуст, не смог решить почему если отправлять пустой инпут в массив попадает элемент = ''
-    if (splitHashtags[i] === '' && splitHashtags.length === 1) {
-      return true;
-    }
-
-    if (!regexp.test(splitHashtags[i])) {
-      return false;
-    }
-  }
-
-  return true;
-};
-
-
-const getErrorMessage = (hashtags) => {
-  const hashtagsString = hashtags.toLowerCase().trim();
-  const splitHashtags = hashtagsString.split(/\s+/);
-  let errorMessage = '';
-
-  if (splitHashtags.length > 5) {
-    errorMessage = 'Превышено количество хэш-тегов';
-    return errorMessage;
-  }
-
-  if (hasDuplicates(splitHashtags)) {
-    errorMessage = 'Хэш-теги повторяются';
-    return errorMessage;
-  }
-
-  for (let i = 0; i < splitHashtags.length; i++) {
-    if (!regexp.test(splitHashtags[i])) {
-      errorMessage = 'Введён невалидный хэш-тег';
-      return errorMessage;
-    }
-  }
-};
-*/
 let errorMessage = '';
 const getErrorMessage = () => errorMessage;
 
@@ -202,10 +131,7 @@ imgEditHashtagsInput.addEventListener('input', ohHashtagInput);
 imgUploadForm.addEventListener('submit', (evt) => {
   const isValid = pristine.validate();
 
-  if(isValid) {
-    //console.log('Можно отправлять');
-  } else {
-    //console.log('Форма невалидна');
+  if(!isValid) {
     evt.preventDefault();
   }
 });
