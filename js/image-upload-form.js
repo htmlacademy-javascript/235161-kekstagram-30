@@ -1,4 +1,5 @@
 import { isEscapeKey } from './util.js';
+import {scalePicture} from './scale-photo.js';
 
 const MAX_SYMBOLS = 20;
 const MAX_HASHTAGS = 5;
@@ -10,9 +11,7 @@ const imgEditHashtagsInput = document.querySelector('.text__hashtags');
 const imgEditCommentArea = document.querySelector('.text__description');
 const imgEditCloseButton = document.querySelector('.img-upload__cancel');
 const imgEditSubmitButton = document.querySelector('.img-upload__submit');
-
-const scaleControlInput = document.querySelector('.scale__control--value');
-let scaleControlInputValue = parseInt(scaleControlInput.value, 10);
+const scaleFormField = document.querySelector('.scale');
 
 const closeImgEditModal = () => {
   imgEditForm.classList.add('hidden');
@@ -22,7 +21,6 @@ const closeImgEditModal = () => {
   imgEditHashtagsInput.value = '';
   imgEditCommentArea.value = '';
   document.querySelector('.img-upload__preview img').style.transform = 'scale(1)';
-  //scaleControlInputValue = 100;
 };
 
 const onImgEditCloseButtonClick = () => {
@@ -58,42 +56,7 @@ const onImgUploadButtonChange = () => {
 
 imgUploadInput.addEventListener('change', onImgUploadButtonChange);
 
-//Тут буду делать зум изображения по клику
-const scaleFormField = document.querySelector('.scale');
-const defaultImg = document.querySelector('.img-upload__preview img');
-//const scaleControlInput = document.querySelector('.scale__control--value');
-
-const SCALE_STEP = 25;
-const SCALE_MAX_VALUE = 100;
-const SCALE_MIN_VALUE = 25;
-
-//1.Все должно быть в 1 функции
-//let scaleControlInputValue = SCALE_DEFAULT_VALUE;
-const scalePicture = (evt) => {
-
-  if (scaleControlInputValue < SCALE_MAX_VALUE) {
-
-    if (evt.target.matches('.scale__control--bigger')) {
-      scaleControlInputValue += SCALE_STEP;
-      const result = scaleControlInputValue / 100;
-      scaleControlInput.value = `${scaleControlInputValue}%`;
-      defaultImg.style.transform = `scale(${result})`;
-    }
-
-  }
-
-  if (scaleControlInputValue > SCALE_MIN_VALUE) {
-
-    if (evt.target.matches('.scale__control--smaller')) {
-      scaleControlInputValue -= SCALE_STEP;
-      const result = scaleControlInputValue / 100;
-      scaleControlInput.value = `${scaleControlInputValue}%`;
-      defaultImg.style.transform = `scale(${result})`;
-    }
-
-  }
-};
-//2.По клику на + или - должно изменяться значение инпута и масштаб картинки
+//2.По клику на + или - должно изменяться значение инпута и масштаб картинки, добавляем обработчик
 scaleFormField.addEventListener('click', scalePicture);
 
 //Тут будет валидация
