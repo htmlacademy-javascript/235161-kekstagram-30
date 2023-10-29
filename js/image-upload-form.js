@@ -1,6 +1,7 @@
 import { isEscapeKey } from './util.js';
 import {scalePicture} from './scale-photo.js';
 import {getErrorMessage, validateHashtags} from './hastags-validation.js';
+import { applySomeEffect } from './effects.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadInput = document.querySelector('.img-upload__input');
@@ -10,6 +11,7 @@ const imgEditCommentArea = document.querySelector('.text__description');
 const imgEditCloseButton = document.querySelector('.img-upload__cancel');
 const imgEditSubmitButton = document.querySelector('.img-upload__submit');
 const scaleFormField = document.querySelector('.scale');
+const effectsList = document.querySelector('.effects__list');
 
 const closeImgEditModal = () => {
   imgEditForm.classList.add('hidden');
@@ -19,6 +21,8 @@ const closeImgEditModal = () => {
   imgEditHashtagsInput.value = '';
   imgEditCommentArea.value = '';
   document.querySelector('.img-upload__preview img').style.transform = 'scale(1)';
+  document.querySelector('.img-upload__effect-level').classList.add('hidden');
+  document.querySelector('.img-upload__preview img').style.filter = 'none';
 };
 
 const onImgEditCloseButtonClick = () => {
@@ -56,6 +60,8 @@ imgUploadInput.addEventListener('change', onImgUploadButtonChange);
 
 //2.По клику на + или - должно изменяться значение инпута и масштаб картинки, добавляем обработчик
 scaleFormField.addEventListener('click', scalePicture);
+//Добавляет прослушка клика по инонкам эффектов
+effectsList.addEventListener('click', applySomeEffect);
 
 //Тут будет валидация
 const pristine = new Pristine(imgUploadForm , {
