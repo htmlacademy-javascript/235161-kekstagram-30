@@ -26,9 +26,9 @@ const scalePicture = (evt) => {
 
   }
 
-  const result = scaleControlInputValue / 100;
+  const scaleFactor = scaleControlInputValue / 100;
   scaleControlInput.value = `${scaleControlInputValue}%`;
-  defaultImg.style.transform = `scale(${result})`;
+  defaultImg.style.transform = `scale(${scaleFactor})`;
 };
 
 export {scalePicture};
