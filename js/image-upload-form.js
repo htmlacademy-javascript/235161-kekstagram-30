@@ -1,7 +1,7 @@
 import { isEscapeKey } from './util.js';
 import {scalePicture} from './scale-photo.js';
 import {getErrorMessage, validateHashtags} from './hastags-validation.js';
-import { applySomeEffect } from './effects.js';
+import { chooseEffect } from './effects.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadInput = document.querySelector('.img-upload__input');
@@ -60,8 +60,8 @@ imgUploadInput.addEventListener('change', onImgUploadButtonChange);
 
 //2.По клику на + или - должно изменяться значение инпута и масштаб картинки, добавляем обработчик
 scaleFormField.addEventListener('click', scalePicture);
-//Добавляет прослушка клика по инонкам эффектов
-effectsList.addEventListener('click', applySomeEffect);
+//Добавляет прослушку клика по иконкам эффектов
+effectsList.addEventListener('click', chooseEffect);
 
 //Тут будет валидация
 const pristine = new Pristine(imgUploadForm , {
