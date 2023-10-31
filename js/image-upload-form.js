@@ -58,12 +58,10 @@ const onImgUploadButtonChange = () => {
 
 imgUploadInput.addEventListener('change', onImgUploadButtonChange);
 
-//2.По клику на + или - должно изменяться значение инпута и масштаб картинки, добавляем обработчик
 scaleFormField.addEventListener('click', scalePicture);
-//Добавляет прослушку клика по иконкам эффектов
+
 effectsList.addEventListener('click', chooseEffect);
 
-//Тут будет валидация
 const pristine = new Pristine(imgUploadForm , {
   classTo: 'img-upload__field-wrapper',
   errorClass: 'img-upload__field-wrapper--invalid',
