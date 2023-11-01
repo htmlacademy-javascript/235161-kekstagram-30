@@ -13,10 +13,20 @@ const imgEditSubmitButton = document.querySelector('.img-upload__submit');
 const scaleFormField = document.querySelector('.scale');
 const effectsList = document.querySelector('.effects__list');
 
+const pristine = new Pristine(imgUploadForm , {
+  classTo: 'img-upload__field-wrapper',
+  errorClass: 'img-upload__field-wrapper--invalid',
+  successClass: 'img-upload__field-wrapper--valid',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'div',
+  errorTextClass: 'form__error'
+});
+
 const closeImgEditModal = () => {
   imgEditForm.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
+  pristine.reset();
   imgUploadInput.value = '';
   imgEditHashtagsInput.value = '';
   imgEditCommentArea.value = '';
@@ -61,15 +71,6 @@ imgUploadInput.addEventListener('change', onImgUploadButtonChange);
 scaleFormField.addEventListener('click', scalePicture);
 
 effectsList.addEventListener('click', chooseEffect);
-
-const pristine = new Pristine(imgUploadForm , {
-  classTo: 'img-upload__field-wrapper',
-  errorClass: 'img-upload__field-wrapper--invalid',
-  successClass: 'img-upload__field-wrapper--valid',
-  errorTextParent: 'img-upload__field-wrapper',
-  errorTextTag: 'div',
-  errorTextClass: 'form__error'
-});
 
 pristine.addValidator(imgEditHashtagsInput, validateHashtags, getErrorMessage);
 
