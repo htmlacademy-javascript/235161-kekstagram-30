@@ -40,15 +40,6 @@ const closeImgEditModal = () => {
   document.body.classList.remove('modal-open');
 
   resetForm();
-
-  /*pristine.reset();
-  imgUploadInput.value = '';
-  imgEditHashtagsInput.value = '';
-  imgEditCommentArea.value = '';
-
-  sliderField.classList.add('hidden');
-  image.style.transform = 'scale(1)';
-  image.style.filter = 'none';*/
 };
 
 const onImgEditCloseButtonClick = () => {
