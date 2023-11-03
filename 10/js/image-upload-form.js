@@ -1,17 +1,17 @@
 import { isEscapeKey } from './util.js';
-import {scalePicture} from './scale-photo.js';
+import {onMinusButtonClick, onPlusButtonClick} from './scale-photo.js';
 import {getErrorMessage, validateHashtags} from './hastags-validation.js';
-import { chooseEffect } from './effects.js';
+import {sliderField, image} from './apply-effects.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
-const imgUploadInput = document.querySelector('.img-upload__input');
-const imgEditForm = document.querySelector('.img-upload__overlay');
-const imgEditHashtagsInput = document.querySelector('.text__hashtags');
-const imgEditCommentArea = document.querySelector('.text__description');
-const imgEditCloseButton = document.querySelector('.img-upload__cancel');
-const imgEditSubmitButton = document.querySelector('.img-upload__submit');
-const scaleFormField = document.querySelector('.scale');
-const effectsList = document.querySelector('.effects__list');
+const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
+const imgEditForm = imgUploadForm.querySelector('.img-upload__overlay');
+const imgEditHashtagsInput = imgUploadForm.querySelector('.text__hashtags');
+const imgEditCommentArea = imgUploadForm.querySelector('.text__description');
+const imgEditCloseButton = imgUploadForm.querySelector('.img-upload__cancel');
+const imgEditSubmitButton = imgUploadForm.querySelector('.img-upload__submit');
+const minusButton = imgUploadForm.querySelector('.scale__control--smaller');
+const plusButton = imgUploadForm.querySelector('.scale__control--bigger');
 
 const pristine = new Pristine(imgUploadForm , {
   classTo: 'img-upload__field-wrapper',
@@ -22,17 +22,33 @@ const pristine = new Pristine(imgUploadForm , {
   errorTextClass: 'form__error'
 });
 
-const closeImgEditModal = () => {
-  imgEditForm.classList.add('hidden');
-  document.body.classList.remove('modal-open');
+const resetForm = () => {
+  imgUploadForm.reset();
 
   pristine.reset();
   imgUploadInput.value = '';
   imgEditHashtagsInput.value = '';
   imgEditCommentArea.value = '';
-  document.querySelector('.img-upload__preview img').style.transform = 'scale(1)';
-  document.querySelector('.img-upload__effect-level').classList.add('hidden');
-  document.querySelector('.img-upload__preview img').style.filter = 'none';
+
+  sliderField.classList.add('hidden');
+  image.style.transform = 'scale(1)';
+  image.style.filter = 'none';
+};
+
+const closeImgEditModal = () => {
+  imgEditForm.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+
+  resetForm();
+
+  /*pristine.reset();
+  imgUploadInput.value = '';
+  imgEditHashtagsInput.value = '';
+  imgEditCommentArea.value = '';
+
+  sliderField.classList.add('hidden');
+  image.style.transform = 'scale(1)';
+  image.style.filter = 'none';*/
 };
 
 const onImgEditCloseButtonClick = () => {
@@ -68,9 +84,8 @@ const onImgUploadButtonChange = () => {
 
 imgUploadInput.addEventListener('change', onImgUploadButtonChange);
 
-scaleFormField.addEventListener('click', scalePicture);
-
-effectsList.addEventListener('click', chooseEffect);
+minusButton.addEventListener('click', onMinusButtonClick);
+plusButton.addEventListener('click', onPlusButtonClick);
 
 pristine.addValidator(imgEditHashtagsInput, validateHashtags, getErrorMessage);
 

@@ -6,29 +6,27 @@ const scaleControlInput = document.querySelector('.scale__control--value');
 const defaultImg = document.querySelector('.img-upload__preview img');
 
 
-const scalePicture = (evt) => {
+const scalePicture = (factor = 1) => {
+  let scaleControlInputValue = parseInt(scaleControlInput.value, 10) + (SCALE_STEP * factor);
 
-  let scaleControlInputValue = parseInt(scaleControlInput.value, 10);
-
-  if (scaleControlInputValue < SCALE_MAX_VALUE) {
-
-    if (evt.target.matches('.scale__control--bigger')) {
-      scaleControlInputValue += SCALE_STEP;
-    }
-
+  if (scaleControlInputValue < SCALE_MIN_VALUE) {
+    scaleControlInputValue = SCALE_MIN_VALUE;
   }
 
-  if (scaleControlInputValue > SCALE_MIN_VALUE) {
-
-    if (evt.target.matches('.scale__control--smaller')) {
-      scaleControlInputValue -= SCALE_STEP;
-    }
-
+  if (scaleControlInputValue > SCALE_MAX_VALUE) {
+    scaleControlInputValue = SCALE_MAX_VALUE;
   }
 
-  const scaleFactor = scaleControlInputValue / 100;
   scaleControlInput.value = `${scaleControlInputValue}%`;
-  defaultImg.style.transform = `scale(${scaleFactor})`;
+  defaultImg.style.transform = `scale(${scaleControlInputValue / 100})`;
 };
 
-export {scalePicture};
+const onMinusButtonClick = () => {
+  scalePicture(-1);
+};
+
+const onPlusButtonClick = () => {
+  scalePicture();
+};
+
+export {onMinusButtonClick, onPlusButtonClick};
