@@ -22,9 +22,8 @@ const pristine = new Pristine(imgUploadForm , {
   errorTextClass: 'form__error'
 });
 
-const closeImgEditModal = () => {
-  imgEditForm.classList.add('hidden');
-  document.body.classList.remove('modal-open');
+const resetForm = () => {
+  imgUploadForm.reset();
 
   pristine.reset();
   imgUploadInput.value = '';
@@ -34,6 +33,22 @@ const closeImgEditModal = () => {
   sliderField.classList.add('hidden');
   image.style.transform = 'scale(1)';
   image.style.filter = 'none';
+};
+
+const closeImgEditModal = () => {
+  imgEditForm.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+
+  resetForm();
+
+  /*pristine.reset();
+  imgUploadInput.value = '';
+  imgEditHashtagsInput.value = '';
+  imgEditCommentArea.value = '';
+
+  sliderField.classList.add('hidden');
+  image.style.transform = 'scale(1)';
+  image.style.filter = 'none';*/
 };
 
 const onImgEditCloseButtonClick = () => {
