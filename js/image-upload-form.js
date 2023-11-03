@@ -1,5 +1,5 @@
 import { isEscapeKey } from './util.js';
-import {scalePicture} from './scale-photo.js';
+import {onMinusButtonClick, onPlusButtonClick} from './scale-photo.js';
 import {getErrorMessage, validateHashtags} from './hastags-validation.js';
 import {sliderField, image} from './apply-effects.js';
 
@@ -10,7 +10,8 @@ const imgEditHashtagsInput = imgUploadForm.querySelector('.text__hashtags');
 const imgEditCommentArea = imgUploadForm.querySelector('.text__description');
 const imgEditCloseButton = imgUploadForm.querySelector('.img-upload__cancel');
 const imgEditSubmitButton = imgUploadForm.querySelector('.img-upload__submit');
-const scaleFormField = imgUploadForm.querySelector('.scale');
+const minusButton = imgUploadForm.querySelector('.scale__control--smaller');
+const plusButton = imgUploadForm.querySelector('.scale__control--bigger');
 
 const pristine = new Pristine(imgUploadForm , {
   classTo: 'img-upload__field-wrapper',
@@ -68,7 +69,8 @@ const onImgUploadButtonChange = () => {
 
 imgUploadInput.addEventListener('change', onImgUploadButtonChange);
 
-scaleFormField.addEventListener('click', scalePicture);
+minusButton.addEventListener('click', onMinusButtonClick);
+plusButton.addEventListener('click', onPlusButtonClick);
 
 pristine.addValidator(imgEditHashtagsInput, validateHashtags, getErrorMessage);
 
