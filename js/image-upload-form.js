@@ -90,10 +90,24 @@ const ohHashtagInput = () => {
 
 imgEditHashtagsInput.addEventListener('input', ohHashtagInput);
 
-imgUploadForm.addEventListener('submit', (evt) => {
-  const isValid = pristine.validate();
-
-  if(!isValid) {
+const setImgUplaodFormSubmit = (onSuccess) => {
+  imgUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-  }
-});
+
+    const isValid = pristine.validate();
+
+    if(isValid) {
+      const formData = new FormData(evt.target);
+
+      fetch(
+        'https://30.javascript.pages.academy/kekstagram',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      ).then(onSuccess);
+    }
+  });
+};
+
+setImgUplaodFormSubmit(closeImgEditModal);
