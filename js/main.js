@@ -1,12 +1,8 @@
-import {getPhotos} from './api.js';
+import {getData} from './api.js';
 import {renderPictures} from './renderPictures.js';
-import './image-upload-form.js';
+import {setImgUplaodFormSubmit} from './image-upload-form.js';
+import {showDataErrorMessage, showStatusMessage} from './status-messages.js';
 
-getPhotos(renderPictures);
-//import {getPhotos} from './api.js';
-/*
-fetch('https://30.javascript.pages.academy/kekstagram/data')
-  .then((response) => response.json())
-  .then((photos) => renderPictures(photos));
-*/
-//renderPictures(photos);
+getData(renderPictures, showDataErrorMessage);
+
+setImgUplaodFormSubmit(showStatusMessage);

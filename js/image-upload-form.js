@@ -2,6 +2,8 @@ import { isEscapeKey } from './util.js';
 import {onMinusButtonClick, onPlusButtonClick} from './scale-photo.js';
 import {getErrorMessage, validateHashtags} from './hastags-validation.js';
 import {sliderField, image} from './apply-effects.js';
+import {successMessage, errorMessage} from './status-messages.js';
+import {sendData} from './api.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
@@ -19,13 +21,13 @@ const pristine = new Pristine(imgUploadForm , {
   successClass: 'img-upload__field-wrapper--valid',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
-  errorTextClass: 'form__error'
+  errorTextClass: 'img-upload__field-wrapper--error'/*'form__error'*/
 });
 
 const resetForm = () => {
   imgUploadForm.reset();
-
   pristine.reset();
+
   imgUploadInput.value = '';
   imgEditHashtagsInput.value = '';
   imgEditCommentArea.value = '';
@@ -42,12 +44,6 @@ const closeImgEditModal = () => {
   resetForm();
 };
 
-const onImgEditCloseButtonClick = () => {
-  closeImgEditModal();
-
-  imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
-};
-
 const onEscKeydown = (evt) => {
   if (isEscapeKey(evt) &&
   !evt.target.classList.contains('text__hashtags') &&
@@ -59,6 +55,13 @@ const onEscKeydown = (evt) => {
 
     document.removeEventListener('keydown', onEscKeydown);
   }
+};
+
+const onImgEditCloseButtonClick = () => {
+  closeImgEditModal();
+
+  imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
+  document.removeEventListener('keydown', onEscKeydown);
 };
 
 const openImgEditModal = () => {
@@ -90,7 +93,7 @@ const ohHashtagInput = () => {
 
 imgEditHashtagsInput.addEventListener('input', ohHashtagInput);
 
-const setImgUplaodFormSubmit = (onSuccess) => {
+const setImgUplaodFormSubmit = (onStatusChange) => {
   imgUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
@@ -99,15 +102,20 @@ const setImgUplaodFormSubmit = (onSuccess) => {
     if(isValid) {
       const formData = new FormData(evt.target);
 
-      fetch(
-        'https://30.javascript.pages.academy/kekstagram',
-        {
-          method: 'POST',
-          body: formData,
-        },
-      ).then(onSuccess);
+      sendData(formData)
+        .then((response) => {
+          if (response.ok) {
+            onStatusChange(successMessage);
+            onImgEditCloseButtonClick();
+          } else {
+            throw new Error();
+          }
+        })
+        .catch(() => {
+          onStatusChange(errorMessage);
+        });
     }
   });
 };
 
-setImgUplaodFormSubmit(closeImgEditModal);
+export {setImgUplaodFormSubmit};
