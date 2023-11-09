@@ -36,14 +36,14 @@ const resetForm = () => {
   image.style.transform = 'scale(1)';
   image.style.filter = 'none';
 };
-
+/*
 const closeImgEditModal = () => {
   imgEditForm.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
   resetForm();
 };
-
+*/
 const onEscKeydown = (evt) => {
   if (isEscapeKey(evt) &&
   !evt.target.classList.contains('text__hashtags') &&
@@ -53,16 +53,26 @@ const onEscKeydown = (evt) => {
 
     closeImgEditModal();
 
-    document.removeEventListener('keydown', onEscKeydown);
+    //document.removeEventListener('keydown', onEscKeydown);
   }
 };
 
 const onImgEditCloseButtonClick = () => {
   closeImgEditModal();
 
+  //imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
+  //document.removeEventListener('keydown', onEscKeydown);
+};
+
+function closeImgEditModal () {
+  imgEditForm.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+
+  resetForm();
+
   imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
   document.removeEventListener('keydown', onEscKeydown);
-};
+}
 
 const openImgEditModal = () => {
   imgEditForm.classList.remove('hidden');
@@ -106,7 +116,7 @@ const setImgUplaodFormSubmit = (onStatusChange) => {
         .then((response) => {
           if (response.ok) {
             onStatusChange(successMessage);
-            onImgEditCloseButtonClick();
+            closeImgEditModal();
           } else {
             throw new Error();
           }
