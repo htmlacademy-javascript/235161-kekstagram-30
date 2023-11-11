@@ -8,6 +8,11 @@ const pictureTemplate = document.querySelector('#picture')
 
 const picturesFragment = document.createDocumentFragment();
 
+const clearPictures = () => {
+  const picturesOnPage = document.querySelectorAll('.picture');
+  picturesOnPage.forEach((picture) => picture.remove());
+};
+
 const renderPicture = (photo) => {
   const pictureElement = pictureTemplate.cloneNode(true);
 
@@ -34,6 +39,8 @@ const renderPictures = (photos) => {
     thumbnail.addEventListener('click', onThumbnailClick);
   });
 
+  clearPictures();
   picturesContainer.append(picturesFragment);
 };
+
 export {renderPictures};
