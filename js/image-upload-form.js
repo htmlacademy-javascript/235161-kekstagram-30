@@ -43,7 +43,7 @@ const onEscKeydown = (evt) => {
   if (isEscapeKey(evt) &&
   !evt.target.classList.contains('text__hashtags') &&
   !evt.target.classList.contains('text__description') &&
-  !evt.target.classList.contains('img-upload__submit')
+  document.querySelector('.error') === null
   ) {
     evt.preventDefault();
 
