@@ -5,7 +5,7 @@ import {showDataErrorMessage} from './status-messages.js';
 import {sortPhotos, shufflePhotos, addFilterClickListener, defaultFilterButton, randomFilterButton, discussedFilterButton} from './filters.js';
 import {debounce} from './util.js';
 
-const SHUFFELED_PHOTOS_COUNT = 10;
+const SHUFFLED_PHOTOS_COUNT = 10;
 
 let photos = [];
 
@@ -22,7 +22,7 @@ const onSuccess = (data) => {
   ));
 
   addFilterClickListener(randomFilterButton, debounce(
-    () => renderPictures(shufflePhotos(photos.slice(0, SHUFFELED_PHOTOS_COUNT)))
+    () => renderPictures(shufflePhotos(photos.slice(0, SHUFFLED_PHOTOS_COUNT)))
   ));
 
   addFilterClickListener(discussedFilterButton, debounce(
