@@ -2,6 +2,8 @@ import { isEscapeKey } from './util.js';
 import {onMinusButtonClick, onPlusButtonClick} from './scale-photo.js';
 import {getErrorMessage, validateHashtags} from './hastags-validation.js';
 import {sliderField, image} from './apply-effects.js';
+import {onSuccess, onFail} from './status-messages.js';
+import {uploadData} from './api.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
@@ -19,47 +21,49 @@ const pristine = new Pristine(imgUploadForm , {
   successClass: 'img-upload__field-wrapper--valid',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
-  errorTextClass: 'form__error'
+  errorTextClass: 'img-upload__field-wrapper--error'
 });
 
 const resetForm = () => {
   imgUploadForm.reset();
-
   pristine.reset();
+
   imgUploadInput.value = '';
   imgEditHashtagsInput.value = '';
   imgEditCommentArea.value = '';
+  imgEditSubmitButton.disabled = false;
 
   sliderField.classList.add('hidden');
   image.style.transform = 'scale(1)';
   image.style.filter = 'none';
 };
 
-const closeImgEditModal = () => {
-  imgEditForm.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-
-  resetForm();
-};
-
-const onImgEditCloseButtonClick = () => {
-  closeImgEditModal();
-
-  imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
-};
-
 const onEscKeydown = (evt) => {
+
   if (isEscapeKey(evt) &&
   !evt.target.classList.contains('text__hashtags') &&
-  !evt.target.classList.contains('text__description')
+  !evt.target.classList.contains('text__description') &&
+  document.querySelector('.error') === null
   ) {
     evt.preventDefault();
 
     closeImgEditModal();
-
-    document.removeEventListener('keydown', onEscKeydown);
   }
 };
+
+const onImgEditCloseButtonClick = () => {
+  closeImgEditModal();
+};
+
+function closeImgEditModal () {
+  imgEditForm.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+
+  resetForm();
+
+  imgEditCloseButton.removeEventListener('click', onImgEditCloseButtonClick);
+  document.removeEventListener('keydown', onEscKeydown);
+}
 
 const openImgEditModal = () => {
   imgEditForm.classList.remove('hidden');
@@ -90,10 +94,18 @@ const ohHashtagInput = () => {
 
 imgEditHashtagsInput.addEventListener('input', ohHashtagInput);
 
-imgUploadForm.addEventListener('submit', (evt) => {
-  const isValid = pristine.validate();
-
-  if(!isValid) {
+const setImgUplaodFormSubmit = () => {
+  imgUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-  }
-});
+
+    const isValid = pristine.validate();
+
+    if(isValid) {
+      const formData = new FormData(evt.target);
+
+      uploadData(onSuccess, onFail, 'POST', formData);
+    }
+  });
+};
+
+export {setImgUplaodFormSubmit, closeImgEditModal};
