@@ -2,8 +2,8 @@ import { isEscapeKey } from './util.js';
 import {onMinusButtonClick, onPlusButtonClick} from './scale-photo.js';
 import {getErrorMessage, validateHashtags} from './hastags-validation.js';
 import {sliderField, image} from './apply-effects.js';
-import {successMessage, errorMessage} from './status-messages.js';
-import {sendData} from './api.js';
+import {onSuccess, onFail} from './status-messages.js';
+import {uploadData} from './api.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
@@ -21,7 +21,7 @@ const pristine = new Pristine(imgUploadForm , {
   successClass: 'img-upload__field-wrapper--valid',
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
-  errorTextClass: 'img-upload__field-wrapper--error'/*'form__error'*/
+  errorTextClass: 'img-upload__field-wrapper--error'
 });
 
 const resetForm = () => {
@@ -31,6 +31,7 @@ const resetForm = () => {
   imgUploadInput.value = '';
   imgEditHashtagsInput.value = '';
   imgEditCommentArea.value = '';
+  imgEditSubmitButton.disabled = false;
 
   sliderField.classList.add('hidden');
   image.style.transform = 'scale(1)';
@@ -38,9 +39,11 @@ const resetForm = () => {
 };
 
 const onEscKeydown = (evt) => {
+
   if (isEscapeKey(evt) &&
   !evt.target.classList.contains('text__hashtags') &&
-  !evt.target.classList.contains('text__description')
+  !evt.target.classList.contains('text__description') &&
+  document.querySelector('.error') === null
   ) {
     evt.preventDefault();
 
@@ -91,7 +94,7 @@ const ohHashtagInput = () => {
 
 imgEditHashtagsInput.addEventListener('input', ohHashtagInput);
 
-const setImgUplaodFormSubmit = (onStatusChange) => {
+const setImgUplaodFormSubmit = () => {
   imgUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
@@ -100,20 +103,9 @@ const setImgUplaodFormSubmit = (onStatusChange) => {
     if(isValid) {
       const formData = new FormData(evt.target);
 
-      sendData(formData)
-        .then((response) => {
-          if (response.ok) {
-            onStatusChange(successMessage);
-            closeImgEditModal();
-          } else {
-            throw new Error();
-          }
-        })
-        .catch(() => {
-          onStatusChange(errorMessage);
-        });
+      uploadData(onSuccess, onFail, 'POST', formData);
     }
   });
 };
 
-export {setImgUplaodFormSubmit};
+export {setImgUplaodFormSubmit, closeImgEditModal};

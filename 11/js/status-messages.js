@@ -1,68 +1,49 @@
 import { isEscapeKey } from './util.js';
+import { closeImgEditModal } from './image-upload-form.js';
 
 const DATA_ERROR_SHOWN_TIME = 5000;
 
-const dataErrorMessageTemplate = document.querySelector('#data-error')
+const dataErrorMessage = document.querySelector('#data-error')
   .content
   .querySelector('.data-error');
-const errorMessageTemplate = document.querySelector('#error')
+
+const errorMessage = document.querySelector('#error')
   .content
   .querySelector('.error');
-const successMessageTemplate = document.querySelector('#success')
+
+const successMessage = document.querySelector('#success')
   .content
   .querySelector('.success');
-const errorMessage = errorMessageTemplate.cloneNode(true);
-const successMessage = successMessageTemplate.cloneNode(true);
 
-const closeSuccessMessage = () => {
-  successMessage.remove();
+const closeMessage = () => {
+  const message = document.querySelector('.success') || document.querySelector('.error');
+  message.remove();
 };
 
-const closeErrorMessage = () => {
-  errorMessage.remove();
-};
-
-const onSuccessEscKeydown = (evt) => {
-  if (isEscapeKey(evt)
-  ) {
+const onEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
 
-    closeSuccessMessage();
+    closeMessage();
 
-    document.removeEventListener('keydown', onSuccessEscKeydown);
+    document.removeEventListener('keydown', onEscKeydown);
+    document.removeEventListener('click', onMouseButtonClick);
+
+    document.querySelector('.img-upload__submit').blur();
   }
 };
 
-const onFailEscKeydown = (evt) => {
-  if (isEscapeKey(evt)
-  ) {
-    evt.preventDefault();
-
-    closeErrorMessage();
-
-    document.removeEventListener('keydown', onFailEscKeydown);
-  }
-};
-
-const onSuccessMouseButtonClick = (evt) => {
-  if (!evt.target.classList.contains('success__inner') &&
-      !evt.target.classList.contains('success__title')) {
-    closeSuccessMessage();
-
-    document.removeEventListener('click', onSuccessMouseButtonClick);
-    document.removeEventListener('keydown', onSuccessEscKeydown);
-  }
-};
-
-const onFailMouseButtonClick = (evt) => {
+function onMouseButtonClick (evt) {
   if (!evt.target.classList.contains('error__inner') &&
-      !evt.target.classList.contains('error__title')) {
-    closeErrorMessage();
+      !evt.target.classList.contains('error__title') &&
+      !evt.target.classList.contains('success__inner') &&
+      !evt.target.classList.contains('success__title')) {
+    closeMessage();
 
-    document.removeEventListener('click', onFailMouseButtonClick);
-    document.removeEventListener('keydown', onFailEscKeydown);
+    document.removeEventListener('click', onMouseButtonClick);
+    document.removeEventListener('keydown', onEscKeydown);
   }
-};
+}
 
 const showStatusMessage = (messageType) => {
   const fragment = document.createDocumentFragment();
@@ -70,20 +51,21 @@ const showStatusMessage = (messageType) => {
   fragment.append(messageType);
   document.body.append(fragment);
 
-  if (messageType === successMessage) {
-    document.addEventListener('keydown', onSuccessEscKeydown);
-    document.addEventListener('click', onSuccessMouseButtonClick);
-  }
+  document.addEventListener('keydown', onEscKeydown);
+  document.addEventListener('click', onMouseButtonClick);
+};
 
-  if (messageType === errorMessage) {
-    document.addEventListener('keydown', onFailEscKeydown);
-    document.addEventListener('click', onFailMouseButtonClick);
-  }
+const onSuccess = () => {
+  showStatusMessage(successMessage);
+  closeImgEditModal();
+};
+
+const onFail = () => {
+  showStatusMessage(errorMessage);
 };
 
 const showDataErrorMessage = () => {
   const fragment = document.createDocumentFragment();
-  const dataErrorMessage = dataErrorMessageTemplate.cloneNode(true);
 
   fragment.append(dataErrorMessage);
   document.body.append(fragment);
@@ -93,4 +75,4 @@ const showDataErrorMessage = () => {
   }, DATA_ERROR_SHOWN_TIME);
 };
 
-export {showDataErrorMessage, showStatusMessage, successMessage, errorMessage};
+export {showDataErrorMessage, onSuccess, onFail};

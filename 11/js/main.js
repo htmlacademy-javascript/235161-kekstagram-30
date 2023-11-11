@@ -1,8 +1,16 @@
-import {getData} from './api.js';
+import {loadData} from './api.js';
 import {renderPictures} from './renderPictures.js';
 import {setImgUplaodFormSubmit} from './image-upload-form.js';
-import {showDataErrorMessage, showStatusMessage} from './status-messages.js';
+import {showDataErrorMessage} from './status-messages.js';
 
-getData(renderPictures, showDataErrorMessage);
+let photos = [];
 
-setImgUplaodFormSubmit(showStatusMessage);
+const onSuccess = (data) => {
+  photos = data.slice();
+  renderPictures(photos);
+  document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+};
+
+loadData(onSuccess, showDataErrorMessage);
+
+setImgUplaodFormSubmit();
