@@ -1,6 +1,5 @@
 import {loadData} from './api.js';
 import {renderPictures} from './renderPictures.js';
-import {setImgUplaodFormSubmit} from './image-upload-form.js';
 import {showDataErrorMessage} from './status-messages.js';
 import {sortPhotos, shufflePhotos, addFilterClickListener, defaultFilterButton, randomFilterButton, discussedFilterButton} from './filters.js';
 import {debounce} from './util.js';
@@ -14,12 +13,12 @@ const onSuccess = (data) => {
 
   photos = data.slice();
 
-  renderPictures(data);
+  renderPictures(photos);
 
   document.querySelector('.img-filters').classList.remove('img-filters--inactive');
 
   addFilterClickListener(defaultFilterButton, debounce(
-    () => renderPictures(data)
+    () => renderPictures(photos)
   ));
 
   addFilterClickListener(randomFilterButton, debounce(
@@ -27,11 +26,9 @@ const onSuccess = (data) => {
   ));
 
   addFilterClickListener(discussedFilterButton, debounce(
-    () => renderPictures(sortPhotos(photos))
+    () => renderPictures(sortPhotos(photos.slice()))
   ));
 
 };
 
 loadData(onSuccess, showDataErrorMessage);
-
-setImgUplaodFormSubmit();
