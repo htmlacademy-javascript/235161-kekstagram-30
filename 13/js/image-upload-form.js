@@ -5,6 +5,8 @@ import {sliderField, image} from './apply-effects.js';
 import {onSuccess, onFail} from './status-messages.js';
 import {uploadData} from './api.js';
 
+const COMMENT_FIELD_ERROR = 'Длина комментария больше 140 символов';
+
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
 const imgEditForm = imgUploadForm.querySelector('.img-upload__overlay');
@@ -43,8 +45,7 @@ const onEscKeydown = (evt) => {
   if (isEscapeKey(evt) &&
   !evt.target.classList.contains('text__hashtags') &&
   !evt.target.classList.contains('text__description') &&
-  document.querySelector('.error') === null
-  ) {
+  document.querySelector('.error') === null) {
     evt.preventDefault();
 
     closeImgEditModal();
@@ -84,6 +85,10 @@ plusButton.addEventListener('click', onPlusButtonClick);
 
 pristine.addValidator(imgEditHashtagsInput, validateHashtags, getErrorMessage);
 
+const validateCommentMessage = (value) => value.length <= 140;
+
+pristine.addValidator(imgEditCommentArea, validateCommentMessage, COMMENT_FIELD_ERROR);
+
 const ohHashtagInput = () => {
   if (pristine.validate()) {
     imgEditSubmitButton.disabled = false;
@@ -94,18 +99,26 @@ const ohHashtagInput = () => {
 
 imgEditHashtagsInput.addEventListener('input', ohHashtagInput);
 
-const setImgUplaodFormSubmit = () => {
-  imgUploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-
-    const isValid = pristine.validate();
-
-    if(isValid) {
-      const formData = new FormData(evt.target);
-
-      uploadData(onSuccess, onFail, 'POST', formData);
-    }
-  });
+const blockSubmitButton = () => {
+  imgEditSubmitButton.disabled = true;
 };
 
-export {setImgUplaodFormSubmit, closeImgEditModal};
+const unblockSubmitButton = () => {
+  document.querySelector('.img-upload__submit').disabled = false;
+};
+
+
+imgUploadForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  const isValid = pristine.validate();
+
+  if(isValid) {
+    const formData = new FormData(evt.target);
+    blockSubmitButton();
+
+    uploadData(onSuccess, onFail, 'POST', formData);
+  }
+});
+
+export {closeImgEditModal, unblockSubmitButton};
