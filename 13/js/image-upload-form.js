@@ -5,6 +5,7 @@ import {sliderField, image} from './apply-effects.js';
 import {onSuccess, onFail} from './status-messages.js';
 import {uploadData} from './api.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const COMMENT_FIELD_ERROR = 'Длина комментария больше 140 символов';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
@@ -16,6 +17,8 @@ const imgEditCloseButton = imgUploadForm.querySelector('.img-upload__cancel');
 const imgEditSubmitButton = imgUploadForm.querySelector('.img-upload__submit');
 const minusButton = imgUploadForm.querySelector('.scale__control--smaller');
 const plusButton = imgUploadForm.querySelector('.scale__control--bigger');
+const imgPreview = imgUploadForm.querySelector('.img-upload__preview img');
+const effectsPreview = imgUploadForm.querySelectorAll('.effects__preview');
 
 const pristine = new Pristine(imgUploadForm , {
   classTo: 'img-upload__field-wrapper',
@@ -73,6 +76,19 @@ const openImgEditModal = () => {
 
 const onImgUploadButtonChange = () => {
   openImgEditModal();
+
+  const file = imgUploadInput.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    imgPreview.src = URL.createObjectURL(file);
+
+    effectsPreview.forEach((preview) => {
+      preview.style.backgroundImage = `url(${imgPreview.src})`;
+    });
+  }
 
   imgEditCloseButton.addEventListener('click', onImgEditCloseButtonClick);
   document.addEventListener('keydown', onEscKeydown);

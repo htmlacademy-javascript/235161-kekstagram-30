@@ -3,7 +3,6 @@ import {renderPictures} from './renderPictures.js';
 import {showDataErrorMessage} from './status-messages.js';
 import {sortPhotos, shufflePhotos, addFilterClickListener, defaultFilterButton, randomFilterButton, discussedFilterButton} from './filters.js';
 import {debounce} from './util.js';
-import './image-preview.js';
 
 const SHUFFLED_PHOTOS_COUNT = 10;
 
