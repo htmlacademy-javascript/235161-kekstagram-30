@@ -1,33 +1,38 @@
-const filterButtons = document.querySelectorAll('.img-filters__button');
-const defaultFilterButton = document.querySelector('#filter-default');
-const randomFilterButton = document.querySelector('#filter-random');
-const discussedFilterButton = document.querySelector('#filter-discussed');
+import {debounce, shufflePhotos, sortPhotos} from './util.js';
+import {renderPictures} from './renderPictures.js';
+import {photos} from './main.js';
 
+const SHUFFLED_PHOTOS_COUNT = 10;
+const ACTIVE_CLASS = 'img-filters__button--active';
 
-//Перемешивание элементов массива в случайном порядке
-const shufflePhotos = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+const imgFilters = document.querySelector('.img-filters');
+const imgFiltersForm = imgFilters.querySelector('.img-filters__form');
+
+const availableFilters = {
+  'filter-default': () => photos.slice(),
+  'filter-random': () => shufflePhotos(photos.slice()).slice(0, SHUFFLED_PHOTOS_COUNT),
+  'filter-discussed': () => sortPhotos(photos.slice())
+};
+
+const isButton = (evt) => evt.target.tagName === 'BUTTON';
+
+const onImgFiltersFormClick = debounce((evt) => {
+  if (isButton(evt)) {
+    renderPictures(availableFilters[evt.target.id]());
   }
-  return array;
+});
+
+const onButtonClick = (evt) => {
+  if (isButton(evt)) {
+    const selectedButton = imgFiltersForm.querySelector(`.${ACTIVE_CLASS}`);
+
+    if (selectedButton) {
+      selectedButton.classList.remove(ACTIVE_CLASS);
+    }
+
+    evt.target.classList.add(ACTIVE_CLASS);
+  }
 };
 
-//Сортировка массива по убыванию комментариев
-const sortPhotos = (array) => {
-  array.sort((a, b) => b.comments.length - a.comments.length);
-
-  return array;
-};
-
-const addFilterClickListener = (button, cb) => {
-  button.addEventListener('click', (evt) => {
-
-    filterButtons.forEach((btn) => btn.classList.remove('img-filters__button--active'));
-    evt.target.classList.add('img-filters__button--active');
-
-    cb();
-  });
-};
-
-export {sortPhotos, shufflePhotos, addFilterClickListener, defaultFilterButton, randomFilterButton, discussedFilterButton};
+imgFiltersForm.addEventListener('click', onImgFiltersFormClick);
+imgFiltersForm.addEventListener('click', onButtonClick);

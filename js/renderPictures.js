@@ -9,8 +9,11 @@ const pictureTemplate = document.querySelector('#picture')
 const picturesFragment = document.createDocumentFragment();
 
 const clearPictures = () => {
-  const picturesOnPage = document.querySelectorAll('.picture');
-  picturesOnPage.forEach((picture) => picture.remove());
+  const picturesOnPage = picturesContainer.querySelectorAll('.picture');
+
+  if (picturesOnPage) {
+    picturesOnPage.forEach((picture) => picture.remove());
+  }
 };
 
 const renderPicture = (photo) => {
