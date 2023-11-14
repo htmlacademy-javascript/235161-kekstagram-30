@@ -22,19 +22,20 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
-const throttle = (callback, delayBetweenFrames) => {
-
-  let lastTime = 0;
-
-  return (...rest) => {
-
-    const now = new Date();
-
-    if (now - lastTime >= delayBetweenFrames) {
-      callback.apply(this, rest);
-      lastTime = now;
-    }
-  };
+//Перемешивание элементов массива в случайном порядке
+const shufflePhotos = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 };
 
-export {getRandomPositiveInteger, getRandomArrayElement, isEscapeKey, debounce, throttle};
+//Сортировка массива по убыванию комментариев
+const sortPhotos = (array) => {
+  array.sort((a, b) => b.comments.length - a.comments.length);
+
+  return array;
+};
+
+export {getRandomPositiveInteger, getRandomArrayElement, isEscapeKey, debounce, shufflePhotos, sortPhotos};

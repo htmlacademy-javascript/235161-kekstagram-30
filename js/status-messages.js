@@ -1,5 +1,5 @@
 import { isEscapeKey } from './util.js';
-import { closeImgEditModal } from './image-upload-form.js';
+import { closeImgEditModal, unblockSubmitButton } from './image-upload-form.js';
 
 const DATA_ERROR_SHOWN_TIME = 5000;
 
@@ -57,11 +57,13 @@ const showStatusMessage = (messageType) => {
 
 const onSuccess = () => {
   showStatusMessage(successMessage);
+  unblockSubmitButton();
   closeImgEditModal();
 };
 
 const onFail = () => {
   showStatusMessage(errorMessage);
+  unblockSubmitButton();
 };
 
 const showDataErrorMessage = () => {
