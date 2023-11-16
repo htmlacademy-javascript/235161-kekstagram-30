@@ -106,7 +106,7 @@ const effectsMap = {
   }
 };
 
-const chooseEffect = (evt) => {
+const onEffectsListClick = (evt) => {
   const effectId = evt.target.id;
   const effect = effectsMap[effectId];
 
@@ -115,6 +115,6 @@ const chooseEffect = (evt) => {
   }
 };
 
-effectsList.addEventListener('click', chooseEffect);
+effectsList.addEventListener('click', onEffectsListClick);
 
 export {sliderField, image};
