@@ -106,11 +106,7 @@ const validateCommentMessage = (value) => value.length <= 140;
 pristine.addValidator(imgEditCommentArea, validateCommentMessage, COMMENT_FIELD_ERROR);
 
 const ohHashtagInput = () => {
-  if (pristine.validate()) {
-    imgEditSubmitButton.disabled = false;
-  } else {
-    imgEditSubmitButton.disabled = true;
-  }
+  imgEditSubmitButton.disabled = !pristine.validate();
 };
 
 imgEditHashtagsInput.addEventListener('input', ohHashtagInput);
@@ -120,9 +116,8 @@ const blockSubmitButton = () => {
 };
 
 const unblockSubmitButton = () => {
-  document.querySelector('.img-upload__submit').disabled = false;
+  imgEditSubmitButton.disabled = false;
 };
-
 
 imgUploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();

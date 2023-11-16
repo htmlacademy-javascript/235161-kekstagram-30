@@ -23,19 +23,19 @@ const debounce = (callback, timeoutDelay = 500) => {
 };
 
 //Перемешивание элементов массива в случайном порядке
-const shufflePhotos = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
+const shufflePhotos = (photos) => {
+  for (let i = photos.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    [photos[i], photos[j]] = [photos[j], photos[i]];
   }
-  return array;
+  return photos;
 };
 
 //Сортировка массива по убыванию комментариев
-const sortPhotos = (array) => {
-  array.sort((a, b) => b.comments.length - a.comments.length);
+const sortPhotos = (photos) => {
+  photos.sort((a, b) => b.comments.length - a.comments.length);
 
-  return array;
+  return photos;
 };
 
 export {getRandomPositiveInteger, getRandomArrayElement, isEscapeKey, debounce, shufflePhotos, sortPhotos};
